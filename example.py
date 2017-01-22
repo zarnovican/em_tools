@@ -9,8 +9,10 @@ in which case, it will be read from
 /run/secrets/foo file.
 """
 import argparse
+import logging
 
 from em_tools.config import add_config_vars
+from em_tools.log import setup_logging
 
 config_vars = {
     'DB_USER':      dict(default='example', help='database user (default "%(default)s")'),
@@ -25,10 +27,12 @@ def main():
         usage='example.py [<option>..]',
         description=__doc__)
     add_config_vars(parser, config_vars)
-    args = parser.parse_args()
+    config = parser.parse_args()
+    setup_logging(config)
 
-    print('Config parameters have the following values:')
-    print(args)
+    logging.info('Starting %s', config.SERVICE_NAME)
+    logging.warning('sample warning')
+    logging.error('sample error')
 
 
 if __name__ == '__main__':
