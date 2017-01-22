@@ -23,8 +23,14 @@ common_config_vars = {
     'LOG_TARGET': dict(
         default='console', choices=['console', 'syslog'],
         help='where to send logs (console/syslog) (default: %(default)s)'),
-    'PROMETHEUS_URL': dict(
-        help='send Prometheus metrics to this pushgateway (eg. "http://localhost:9091/")'),
+    'METRICS': dict(
+        help='if set, it will push prometheus metrics to pushgateway'),
+    'METRICS_HOST': dict(
+        default='localhost',
+        help='prometheus pushgateway hostname (default: "%(default)s")'),
+    'METRICS_INTERVAL': dict(
+        default=10, type=int,
+        help='how often to push out metrics [s] (default: %(default)ss)'),
 }
 
 

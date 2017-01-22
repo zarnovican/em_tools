@@ -10,9 +10,13 @@ in which case, it will be read from
 """
 import argparse
 import logging
+import time
+
+from prometheus_client import Summary
 
 from em_tools.config import add_config_vars
 from em_tools.log import setup_logging
+from em_tools.metrics import setup_prometheus, registry
 
 config_vars = {
     'DB_USER':      dict(default='example', help='database user (default "%(default)s")'),
@@ -21,6 +25,11 @@ config_vars = {
     'DB_PORT':      dict(default='5432', help='database port (default "%(default)s")'),
 }
 
+REQUEST_TIME = Summary('request_processing_seconds', 'Time spent processing request', registry=registry)
+
+@REQUEST_TIME.time()
+def sample_request_handler():
+    time.sleep(.01)
 
 def main():
     parser = argparse.ArgumentParser(
@@ -29,11 +38,20 @@ def main():
     add_config_vars(parser, config_vars)
     config = parser.parse_args()
     setup_logging(config)
+    setup_prometheus(config)
 
     logging.info('Starting %s', config.SERVICE_NAME)
     logging.warning('sample warning')
     logging.error('sample error')
 
+    if config.METRICS:
+        logging.info('Running simulated traffic for 30s')
+        for _ in range(3000):
+            sample_request_handler()
+
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        pass
