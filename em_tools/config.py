@@ -83,7 +83,7 @@ def _add_argument(parser, envname, attr):
     parser.add_argument('--{}'.format(envname), **kwargs)
 
 
-def add_config_vars(parser, config_vars, service_name='dummy'):
+def setup_config(parser, config_vars, service_name='dummy'):
     """Add dict of configuration variables to argparse's parser
 
     It will create two option groups 'mandatory' and 'common'.

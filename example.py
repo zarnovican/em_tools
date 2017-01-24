@@ -14,7 +14,7 @@ import time
 
 from prometheus_client import Summary
 
-from em_tools.config import add_config_vars
+from em_tools.config import setup_config
 from em_tools.log import setup_logging
 from em_tools.metrics import setup_prometheus, registry
 
@@ -35,7 +35,7 @@ def main():
     parser = argparse.ArgumentParser(
         usage='example.py [<option>..]',
         description=__doc__)
-    add_config_vars(parser, config_vars)
+    setup_config(parser, config_vars)
     config = parser.parse_args()
     setup_logging(config)
     setup_prometheus(config)
