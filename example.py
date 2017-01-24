@@ -14,8 +14,7 @@ import time
 
 from prometheus_client import Summary
 
-from em_tools.config import setup_config
-from em_tools.log import setup_logging
+from em_tools import setup_config, setup_logging, setup_metrics
 from em_tools.metrics import setup_metrics, registry
 
 config_vars = {
