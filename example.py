@@ -8,14 +8,13 @@ value may be specified as "secret:foo",
 in which case, it will be read from
 /run/secrets/foo file.
 """
-import argparse
 import logging
 import time
 
 from prometheus_client import Summary
 
-from em_tools import setup_config, setup_logging, setup_metrics
-from em_tools.metrics import setup_metrics, registry
+from em_tools import basic_setup
+from em_tools.metrics import registry
 
 config_vars = {
     'DB_USER':      dict(default='example', help='database user (default "%(default)s")'),
@@ -30,15 +29,11 @@ REQUEST_TIME = Summary('request_processing_seconds', 'Time spent processing requ
 def sample_request_handler():
     time.sleep(.01)
 
-def main():
-    parser = argparse.ArgumentParser(
-        usage='example.py [<option>..]',
-        description=__doc__)
-    setup_config(parser, config_vars)
-    config = parser.parse_args()
-    setup_logging(config)
-    setup_metrics(config)
 
+def main():
+    config = basic_setup(service_name='example.py', description=__doc__, config_vars=config_vars)
+
+    print(config)
     logging.info('Starting %s', config.SERVICE_NAME)
     logging.warning('sample warning')
     logging.error('sample error')
