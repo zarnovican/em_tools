@@ -29,7 +29,7 @@ def prometheus_pusher(config):
             logging.warning('Prometheus push failed "http://%s/" %s', url, str(e))
 
 
-def setup_prometheus(config):
+def setup_metrics(config):
     """start Prometheus pushing thread"""
 
     if not config.METRICS:

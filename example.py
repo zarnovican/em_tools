@@ -16,7 +16,7 @@ from prometheus_client import Summary
 
 from em_tools.config import setup_config
 from em_tools.log import setup_logging
-from em_tools.metrics import setup_prometheus, registry
+from em_tools.metrics import setup_metrics, registry
 
 config_vars = {
     'DB_USER':      dict(default='example', help='database user (default "%(default)s")'),
@@ -38,7 +38,7 @@ def main():
     setup_config(parser, config_vars)
     config = parser.parse_args()
     setup_logging(config)
-    setup_prometheus(config)
+    setup_metrics(config)
 
     logging.info('Starting %s', config.SERVICE_NAME)
     logging.warning('sample warning')
