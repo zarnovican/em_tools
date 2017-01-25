@@ -83,13 +83,16 @@ def _add_argument(parser, envname, attr):
     parser.add_argument('--{}'.format(envname), **kwargs)
 
 
-def setup_config(parser, config_vars, service_name='dummy'):
+def setup_config(parser, config_vars, service_name='dummy', version=None):
     """Add dict of configuration variables to argparse's parser
 
     It will create two option groups 'mandatory' and 'common'.
     Global config variables are added to common group.
     Service-specific variable are adde to either base or mandatory,
     depending if the variable is required=True."""
+
+    if version is not None:
+        parser.add_argument('--version', action='version', version=version)
 
     mandatory_group = parser.add_argument_group('mandatory arguments')
     for envname, attr in config_vars.items():
