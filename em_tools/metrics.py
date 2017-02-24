@@ -20,11 +20,17 @@ def prometheus_pusher(config):
     url = '{}:9091'.format(config.METRICS_HOST)
     interval = config.METRICS_INTERVAL
     job = config.SERVICE_NAME
+    grouping_key = {}
+    for tag in config.METRICS_TAGS.split(','):
+        if tag.strip() == '':
+            continue
+        (name, _, value) = tag.partition('=')
+        grouping_key[name.strip()] = value.strip()
     logging.info('Prometheus metrics push thread started: url=%s, interval=%ds', url, interval)
     while True:
         time.sleep(interval)
         try:
-            push_to_gateway(url, job=job, registry=registry)
+            push_to_gateway(url, job=job, registry=registry, grouping_key=grouping_key)
         except URLError as e:
             logging.warning('Prometheus push failed "http://%s/" %s', url, str(e))
 

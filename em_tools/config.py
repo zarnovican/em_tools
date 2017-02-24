@@ -31,6 +31,9 @@ common_config_vars = {
     'METRICS_INTERVAL': dict(
         default=10, type=int,
         help='how often to push out metrics [s] (default: %(default)ss)'),
+    'METRICS_TAGS': dict(
+        default='',
+        help='extra Prometheus tags as comma-separated A-V pairs, eg. "task=1,env=prod" (default: "%(default)s")'),
 }
 
 
