@@ -42,13 +42,13 @@ def setup_metrics(loop, config):
 
     If metrics pushing is not enabled, it will return None"""
 
-    if not config.METRICS:
+    if not config.PROMETHEUS_HOST:
         logging.info('Prometheus metrics pushing is disabled, which is ok.')
         return None
 
-    url = 'http://{}:9091'.format(config.METRICS_HOST)
+    url = 'http://{}:9091'.format(config.PROMETHEUS_HOST)
     return loop.create_task(prometheus_pusher(
-        url=url, job=config.SERVICE_NAME, interval=config.METRICS_INTERVAL, tags=config.METRICS_TAGS))
+        url=url, job=config.SERVICE_NAME, interval=config.PROMETHEUS_INTERVAL, tags=config.PROMETHEUS_TAGS))
 
 
 def shutdown_metrics(loop, pusher_task):

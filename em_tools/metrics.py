@@ -17,11 +17,11 @@ registry = CollectorRegistry()
 
 
 def prometheus_pusher(config):
-    url = '{}:9091'.format(config.METRICS_HOST)
-    interval = config.METRICS_INTERVAL
+    url = '{}:9091'.format(config.PROMETHEUS_HOST)
+    interval = config.PROMETHEUS_INTERVAL
     job = config.SERVICE_NAME
     grouping_key = {}
-    for tag in config.METRICS_TAGS.split(','):
+    for tag in config.PROMETHEUS_TAGS.split(','):
         if tag.strip() == '':
             continue
         (name, _, value) = tag.partition('=')
@@ -38,7 +38,7 @@ def prometheus_pusher(config):
 def setup_metrics(config):
     """start Prometheus pushing thread"""
 
-    if not config.METRICS:
+    if not config.PROMETHEUS_HOST:
         logging.info('Prometheus metrics pushing is disabled, which is ok.')
         return None
 

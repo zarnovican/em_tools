@@ -38,7 +38,7 @@ def main():
     logging.warning('sample warning')
     logging.error('sample error')
 
-    if config.METRICS:
+    if config.PROMETHEUS_HOST:
         logging.info('Running simulated traffic for 30s')
         for _ in range(3000):
             sample_request_handler()

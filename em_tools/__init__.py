@@ -15,6 +15,6 @@ def basic_setup(service_name='dummy', usage=None, description=None, version=None
     parser = argparse.ArgumentParser(usage=usage, description=description)
     setup_config(parser, config_vars, version=version)
     config = parser.parse_args()
-    setup_logging(config)
+    setup_logging(config, version=version)
     setup_metrics(config)
     return config

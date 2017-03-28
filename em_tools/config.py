@@ -13,27 +13,27 @@ from argparse import ArgumentError, _StoreAction
 
 common_config_vars = {
     'SERVICE_NAME': dict(help='service name (default: "%(default)s")'),
-    'DOCKER_TASK_SLOT': dict(help='task slot, if executed via Docker Swarm'),
-    'VERBOSITY': dict(
-        default=2, type=int, choices=[0, 1, 2, 3],
-        help='logging verbosity: 0 error, 1 warning, 2 info, 3 debug (default: %(default)s)'),
+    'TASK_SLOT': dict(
+        default=1, type=int,
+        help='task id within service (default: %(default)s)'),
+    'LOG_LEVEL': dict(
+        default='info', choices=['error', 'warning', 'info', 'debug'],
+        help='logging verbosity: error/warning/info/debug (default: %(default)s)'),
     'SENTRY_DSN': dict(
         secret=True,
         help='(secret) sentry DSN. If set, sentry logger will be configured as well (default: unset)'),
     'LOG_TARGET': dict(
         default='console', choices=['console', 'syslog'],
         help='where to send logs (console/syslog) (default: %(default)s)'),
-    'METRICS': dict(
-        help='if set, it will push prometheus metrics to pushgateway'),
-    'METRICS_HOST': dict(
-        default='localhost',
-        help='prometheus pushgateway hostname (default: "%(default)s")'),
-    'METRICS_INTERVAL': dict(
+    'PROMETHEUS_HOST': dict(
+        default='',
+        help='prometheus pushgateway hostname, non-empty value enables pushing (default: "%(default)s")'),
+    'PROMETHEUS_INTERVAL': dict(
         default=10, type=int,
         help='how often to push out metrics [s] (default: %(default)ss)'),
-    'METRICS_TAGS': dict(
+    'PROMETHEUS_TAGS': dict(
         default='',
-        help='extra Prometheus tags as comma-separated A-V pairs, eg. "task=1,env=prod" (default: "%(default)s")'),
+        help='extra Prometheus tags as comma-separated A-V pairs, eg. "slot=1,env=prod" (default: "%(default)s")'),
 }
 
 
@@ -41,14 +41,13 @@ class StoreSecret(_StoreAction):
     """argparse 'action' to transparently load the secret from file
 
     if the string value of configuration parameter is "secret:<name>"
-    then <name> is considered a filename under $SECRETS_PATH directory
-    (/run/secrets by default). For example, input "secret:sentry_dsn"
-    will read set the value to content of /run/secrets/sentry_dsn
-    file"""
+    then <name> is considered a filename under /run/secrets/ directory
+    For example, input "secret:sentry_dsn" will set the value
+    to the content of /run/secrets/sentry_dsn file"""
 
     def __call__(self, parser, namespace, values, option_string=None):
         if values.startswith('secret:'):
-            secret_file = os.path.join(os.environ.get('SECRETS_PATH', '/run/secrets'), values[7:])
+            secret_file = os.path.join('/run/secrets', values[7:])
             try:
                 with open(secret_file) as f:
                     values = f.read()

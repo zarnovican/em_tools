@@ -36,8 +36,8 @@ They will be added to `argparse` as part of `setup_config()`/`basic_setup()` cal
 ### secrets
 
 If the string value of configuration parameter is `"secret:<name>"`
-then `<name>` is considered to be a filename under `$SECRETS_PATH` directory
-(/run/secrets/ by default). For example, config parameter with
+then `<name>` is considered to be a filename under `/run/secrets/` directory
+For example, config parameter with
 value `"secret:sentry_dsn"` will get its the value from the content
 of `/run/secrets/sentry_dsn` file.
 
@@ -153,16 +153,19 @@ mandatory arguments:
   --DB_HOSTNAME <str>   database hostname
 
 common options:
-  --METRICS_HOST <str>  prometheus pushgateway hostname (default: "localhost")
-  --VERBOSITY <int>     logging verbosity: 0 error, 1 warning, 2 info, 3 debug
-                        (default: 2)
-  --METRICS <str>       if set, it will push prometheus metrics to pushgateway
+  --LOG_TARGET <str>    where to send logs (console/syslog) (default: console)
   --SENTRY_DSN <str>    (secret) sentry DSN. If set, sentry logger will be
                         configured as well (default: unset)
+  --LOG_LEVEL <str>     logging verbosity: error/warning/info/debug (default:
+                        info)
+  --TASK_SLOT <int>     task id within service (default: 1)
   --SERVICE_NAME <str>  service name (default: "dummy")
-  --METRICS_INTERVAL <int>
+  --PROMETHEUS_HOST <str>
+                        prometheus pushgateway hostname, non-empty value
+                        enables pushing (default: "")
+  --PROMETHEUS_INTERVAL <int>
                         how often to push out metrics [s] (default: 10s)
-  --DOCKER_TASK_SLOT <str>
-                        task slot, if executed via Docker Swarm
-  --LOG_TARGET <str>    where to send logs (console/syslog) (default: console)
+  --PROMETHEUS_TAGS <str>
+                        extra Prometheus tags as comma-separated A-V pairs,
+                        eg. "slot=1,env=prod" (default: "")
 ```
