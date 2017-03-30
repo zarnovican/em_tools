@@ -28,12 +28,9 @@ common_config_vars = {
     'PROMETHEUS_HOST': dict(
         default='',
         help='prometheus pushgateway hostname, non-empty value enables pushing (default: "%(default)s")'),
-    'PROMETHEUS_INTERVAL': dict(
+    'PROMETHEUS_PUSH_INTERVAL': dict(
         default=10, type=int,
         help='how often to push out metrics [s] (default: %(default)ss)'),
-    'PROMETHEUS_TAGS': dict(
-        default='',
-        help='extra Prometheus tags as comma-separated A-V pairs, eg. "slot=1,env=prod" (default: "%(default)s")'),
 }
 
 

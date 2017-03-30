@@ -18,14 +18,9 @@ registry = CollectorRegistry()
 
 def prometheus_pusher(config):
     url = '{}:9091'.format(config.PROMETHEUS_HOST)
-    interval = config.PROMETHEUS_INTERVAL
+    interval = config.PROMETHEUS_PUSH_INTERVAL
     job = config.SERVICE_NAME
-    grouping_key = {}
-    for tag in config.PROMETHEUS_TAGS.split(','):
-        if tag.strip() == '':
-            continue
-        (name, _, value) = tag.partition('=')
-        grouping_key[name.strip()] = value.strip()
+    grouping_key = { 'slot': config.TASK_SLOT, }
     logging.info('Prometheus metrics push thread started: url=%s, interval=%ds', url, interval)
     while True:
         time.sleep(interval)

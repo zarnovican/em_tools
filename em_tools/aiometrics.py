@@ -8,17 +8,12 @@ from prometheus_client import CollectorRegistry, generate_latest
 from .metrics import registry
 
 
-async def prometheus_pusher(url, job, interval, tags):
+async def prometheus_pusher(url, job, interval, task_slot):
     """async task to push metrics to prometheus pushgateway"""
 
     try:
         pushgateway_uri = '{}/metrics/job/{}'.format(url.rstrip('/'), job)
-        grouping_key = {}
-        for tag in tags.split(','):
-            if tag.strip() == '':
-                continue
-            (name, _, value) = tag.partition('=')
-            grouping_key[name.strip()] = value.strip()
+        grouping_key = { 'slot': task_slot, }
         pushgateway_uri += ''.join(['/{0}/{1}'.format(k, v) for k, v in sorted(grouping_key.items())])
         logging.info('Starting prometheus_pusher loop, url={}, interval={}s'.format(pushgateway_uri, interval))
         async with aiohttp.ClientSession() as session:
@@ -48,7 +43,7 @@ def setup_metrics(loop, config):
 
     url = 'http://{}:9091'.format(config.PROMETHEUS_HOST)
     return loop.create_task(prometheus_pusher(
-        url=url, job=config.SERVICE_NAME, interval=config.PROMETHEUS_INTERVAL, tags=config.PROMETHEUS_TAGS))
+        url=url, job=config.SERVICE_NAME, interval=config.PROMETHEUS_PUSH_INTERVAL, task_slot=config.TASK_SLOT))
 
 
 def shutdown_metrics(loop, pusher_task):

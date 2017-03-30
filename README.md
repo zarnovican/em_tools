@@ -153,19 +153,16 @@ mandatory arguments:
   --DB_HOSTNAME <str>   database hostname
 
 common options:
-  --LOG_TARGET <str>    where to send logs (console/syslog) (default: console)
   --SENTRY_DSN <str>    (secret) sentry DSN. If set, sentry logger will be
                         configured as well (default: unset)
+  --LOG_TARGET <str>    where to send logs (console/syslog) (default: console)
+  --SERVICE_NAME <str>  service name (default: "dummy")
+  --TASK_SLOT <int>     task id within service (default: 1)
   --LOG_LEVEL <str>     logging verbosity: error/warning/info/debug (default:
                         info)
-  --TASK_SLOT <int>     task id within service (default: 1)
-  --SERVICE_NAME <str>  service name (default: "dummy")
   --PROMETHEUS_HOST <str>
                         prometheus pushgateway hostname, non-empty value
                         enables pushing (default: "")
-  --PROMETHEUS_INTERVAL <int>
+  --PROMETHEUS_PUSH_INTERVAL <int>
                         how often to push out metrics [s] (default: 10s)
-  --PROMETHEUS_TAGS <str>
-                        extra Prometheus tags as comma-separated A-V pairs,
-                        eg. "slot=1,env=prod" (default: "")
 ```
